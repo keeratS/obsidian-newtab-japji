@@ -8,15 +8,11 @@ Start each Obsidian tab with a short passage from Japji Sahib, in Roman translit
 - Shortcuts to create a note, find a note, or return to recent notes.
 - The complete text ships with the plugin and works offline from the first launch.
 
-![New Tab Japji in Obsidian, showing a Japji Sahib passage with English translations and note shortcuts](docs/images/new-tab-japji.png)
+| Light mode | Blue Topaz · Dark mode | Obsidianite · Dark mode |
+| :---: | :---: | :---: |
+| [![New Tab Japji in light mode](docs/images/new-tab-japji.png)](docs/images/new-tab-japji.png) | [![New Tab Japji in dark mode with Blue Topaz](docs/images/new-tab-japji-blue-topaz-dark.png)](docs/images/new-tab-japji-blue-topaz-dark.png) | [![New Tab Japji in dark mode with Obsidianite](docs/images/new-tab-japji-obsidianite-dark.png)](docs/images/new-tab-japji-obsidianite-dark.png) |
 
-Dark mode with the **Blue Topaz** theme:
-
-![New Tab Japji in dark mode with the Blue Topaz theme](docs/images/new-tab-japji-blue-topaz-dark.png)
-
-Dark mode with the **Obsidianite** theme:
-
-![New Tab Japji in dark mode with the Obsidianite theme](docs/images/new-tab-japji-obsidianite-dark.png)
+Select a screenshot to view it at full size.
 
 Enable **New Tab Japji**, then open a new tab to begin.
 
