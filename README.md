@@ -24,4 +24,4 @@ Enable **New Tab Japji**, then open a new tab to begin.
 
 ## Attribution
 
-Text and translation: [SikhiWiki contributors — Learn all of Japji Sahib](https://www.sikhiwiki.org/index.php/Learn_all_of_Japji_Sahib), under [GFDL 1.2 or later](data/GFDL-1.2.txt). See [source and adaptation details](data/NOTICE.md). Plugin code: [MIT](LICENSE).
+Text and translation: [SikhiWiki contributors — Learn all of Japji Sahib](https://www.sikhiwiki.org/index.php/Learn_all_of_Japji_Sahib), under [GFDL 1.2 or later](data/GFDL-1.2.txt). See [source and adaptation details](data/NOTICE.md). Plugin code: [GNU GPLv3](LICENSE). Distributed code modifications must remain open under GPLv3. See [licensing details](COPYRIGHT.md).

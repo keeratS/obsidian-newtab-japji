@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Keerat Singh
+// SPDX-License-Identifier: GPL-3.0-only
 import corpus from '../data/japji-sahib.json';
 
 export const SOURCE = corpus.source;

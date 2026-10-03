@@ -1,6 +1,6 @@
 {
-  "name": "japji-new-tab",
-  "version": "0.1.0",
+  "name": "new-tab-japji",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",
@@ -14,5 +14,6 @@
     "obsidian": "^1.8.7",
     "typescript": "^5.8.0",
     "vitest": "^4.1.11"
-  }
+  },
+  "license": "GPL-3.0-only"
 }

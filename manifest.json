@@ -1,9 +1,10 @@
 {
-  "id": "japji-new-tab",
+  "id": "new-tab-japji",
   "name": "New Tab Japji",
-  "version": "0.1.0",
-  "minAppVersion": "1.5.0",
-  "description": "Start each new tab with a short passage from Japji Sahib, its English translation, and useful note shortcuts.",
+  "version": "1.0.0",
+  "minAppVersion": "1.10.0",
+  "description": "Show sequential passages from the Sikh prayer Japji Sahib in each new tab, with Roman transliteration, English translations, and note shortcuts. Works offline and follows your theme.",
   "author": "Keerat Singh",
-  "isDesktopOnly": false
+  "isDesktopOnly": false,
+  "authorUrl": "https://www.redwoodrewrite.com/making-an-obsidian-plugin/"
 }

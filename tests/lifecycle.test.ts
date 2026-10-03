@@ -1,14 +1,16 @@
+// Copyright (c) 2026 Keerat Singh
+// SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 import { beforeEach, expect, it, vi } from 'vitest';
-const mocks = vi.hoisted(()=>({events:new Map<string,()=>void>(),leaves:[] as any[],request:vi.fn(),load:vi.fn(),save:vi.fn(),create:vi.fn(),open:vi.fn()}));
+const mocks = vi.hoisted(()=>({events:new Map<string,()=>void>(),leaves:[] as any[],load:vi.fn(),save:vi.fn(),create:vi.fn(),open:vi.fn()}));
 vi.mock('obsidian',()=>({
   Plugin:class {
     app={workspace:{on:(event:string,callback:()=>void)=>{mocks.events.set(event,callback);},getLeavesOfType:()=>mocks.leaves,onLayoutReady:(cb:()=>void)=>cb()},fileManager:{getNewFileParent:()=>({isRoot:()=>true})},vault:{getAbstractFileByPath:(path:string)=>path==='Untitled.md'?{}:null,create:mocks.create}};
     loadData=mocks.load; saveData=mocks.save;
-    addSettingTab(){} addCommand(){} registerEvent(){}
+    addCommand(){} registerEvent(){}
   },
   FuzzySuggestModal:class {},Notice:class {},
-  requestUrl:mocks.request,setIcon:()=>{}
+  setIcon:()=>{}
 }));
 import Plugin from '../src/main';
 import { PASSAGES } from '../src/passages';
@@ -20,7 +22,7 @@ Object.assign(HTMLElement.prototype,{
   createSpan(options:any){return this.createEl('span',options);}
 });
 function leaf(){const container=document.createElement('div');container.innerHTML='<div class="view-content"><div class="empty-state">Native shortcuts</div></div>';document.body.append(container);return {view:{containerEl:container},openFile:mocks.open};}
-beforeEach(()=>{document.body.replaceChildren();mocks.events.clear();mocks.leaves=[];mocks.request.mockReset();mocks.load.mockReset().mockResolvedValue(null);mocks.save.mockReset().mockResolvedValue(undefined);mocks.open.mockReset();mocks.create.mockReset().mockResolvedValue({path:'Untitled 1.md'});});
+beforeEach(()=>{document.body.replaceChildren();mocks.events.clear();mocks.leaves=[];mocks.load.mockReset().mockResolvedValue(null);mocks.save.mockReset().mockResolvedValue(undefined);mocks.open.mockReset();mocks.create.mockReset().mockResolvedValue({path:'Untitled 1.md'});});
 it('mounts once per empty tab, ignores file leaves, and restores native content on unload',async()=>{
   mocks.leaves=[leaf(),leaf()];const plugin=new Plugin({} as any,{} as any);await plugin.onload();
   mocks.events.get('layout-change')!();mocks.events.get('active-leaf-change')!();
@@ -29,7 +31,7 @@ it('mounts once per empty tab, ignores file leaves, and restores native content 
   mocks.leaves.shift();mocks.events.get('layout-change')!();
   expect(document.querySelectorAll('.japji-new-tab')).toHaveLength(1);
   plugin.onunload();expect(document.querySelectorAll('.japji-new-tab,.japji-empty')).toHaveLength(0);
-  expect(document.querySelectorAll('.empty-state')).toHaveLength(2);expect(mocks.request).not.toHaveBeenCalled();
+  expect(document.querySelectorAll('.empty-state')).toHaveLength(2);
 });
 it('creates a unique filename and opens it in the originating leaf',async()=>{
   mocks.leaves=[leaf()];const plugin=new Plugin({} as any,{} as any);await plugin.onload();
@@ -37,18 +39,16 @@ it('creates a unique filename and opens it in the originating leaf',async()=>{
   await vi.waitFor(()=>expect(mocks.open).toHaveBeenCalledWith({path:'Untitled 1.md'}));
   expect(mocks.create).toHaveBeenCalledWith('Untitled 1.md','');plugin.onunload();
 });
-it('uses the complete local corpus on a fresh install without any requests',async()=>{
+it('renders the bundled text and Khanda on a fresh install',async()=>{
   mocks.leaves=[leaf()];const plugin=new Plugin({} as any,{} as any);await plugin.onload();
   expect(plugin.passages.flatMap(p=>p.verses)).toHaveLength(277);
   expect(document.querySelectorAll('.japji-verse')).toHaveLength(4);
-  expect(document.querySelector('.japji-status')).toBeNull();
   expect(document.querySelector('.japji-passage')?.firstElementChild?.textContent).toBe('☬');
-  expect(mocks.request).not.toHaveBeenCalled();plugin.onunload();
+  plugin.onunload();
 });
 
 it('rotates 4, then the remainder, then the next pauri and resumes after restart',async()=>{
-  // Legacy cached text/settings are ignored; the saved reading position survives.
-  mocks.load.mockResolvedValue({online:true,passages:[{invalid:'old cache'}],nextPassage:2});mocks.leaves=[leaf()];
+  mocks.load.mockResolvedValue({nextPassage:2});mocks.leaves=[leaf()];
   const plugin=new Plugin({} as any,{} as any);await plugin.onload();
   expect(document.querySelectorAll('.japji-verse')).toHaveLength(4);
   (document.querySelector('.japji-next') as HTMLButtonElement).click();

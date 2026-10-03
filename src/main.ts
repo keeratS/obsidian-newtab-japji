@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Keerat Singh
+// SPDX-License-Identifier: GPL-3.0-only
 import { App, FuzzySuggestModal, Notice, Plugin, TFile, WorkspaceLeaf, setIcon } from 'obsidian';
 import { PASSAGES, SOURCE } from './passages';
 
