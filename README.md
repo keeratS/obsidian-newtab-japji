@@ -20,6 +20,8 @@ Dark mode with the **Obsidianite** theme:
 
 Enable **New Tab Japji**, then open a new tab to begin.
 
+**Compatibility:** New Tab Japji replaces the default empty-tab content and may conflict with other plugins that customize new tabs. Use only one new-tab customization plugin at a time.
+
 [Local installation, development, and release guide](docs/DEVELOPMENT.md)
 
 ## Attribution

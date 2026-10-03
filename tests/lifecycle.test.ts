@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // @vitest-environment jsdom
 import { beforeEach, expect, it, vi } from 'vitest';
-const mocks = vi.hoisted(()=>({events:new Map<string,()=>void>(),leaves:[] as any[],load:vi.fn(),save:vi.fn(),create:vi.fn(),open:vi.fn()}));
+const mocks = vi.hoisted(()=>({ready:true,readyCallbacks:[] as (()=>void)[],commands:[] as any[],getLeaf:vi.fn(),events:new Map<string,()=>void>(),leaves:[] as any[],load:vi.fn(),save:vi.fn(),create:vi.fn(),open:vi.fn()}));
 vi.mock('obsidian',()=>({
   Plugin:class {
-    app={workspace:{on:(event:string,callback:()=>void)=>{mocks.events.set(event,callback);},getLeavesOfType:()=>mocks.leaves,onLayoutReady:(cb:()=>void)=>cb()},fileManager:{getNewFileParent:()=>({isRoot:()=>true})},vault:{getAbstractFileByPath:(path:string)=>path==='Untitled.md'?{}:null,create:mocks.create}};
+    app={workspace:{get layoutReady(){return mocks.ready;},getLeaf:mocks.getLeaf,on:(event:string,callback:()=>void)=>{mocks.events.set(event,callback);},getLeavesOfType:()=>mocks.leaves,onLayoutReady:(cb:()=>void)=>{if(mocks.ready)cb();else mocks.readyCallbacks.push(cb);}},fileManager:{getNewFileParent:()=>({isRoot:()=>true})},vault:{getAbstractFileByPath:(path:string)=>path==='Untitled.md'?{}:null,create:mocks.create}};
     loadData=mocks.load; saveData=mocks.save;
-    addCommand(){} registerEvent(){}
+    addCommand(command:any){mocks.commands.push(command);} registerEvent(){}
   },
   FuzzySuggestModal:class {},Notice:class {},
   setIcon:()=>{}
@@ -22,7 +22,7 @@ Object.assign(HTMLElement.prototype,{
   createSpan(options:any){return this.createEl('span',options);}
 });
 function leaf(){const container=document.createElement('div');container.innerHTML='<div class="view-content"><div class="empty-state">Native shortcuts</div></div>';document.body.append(container);return {view:{containerEl:container},openFile:mocks.open};}
-beforeEach(()=>{document.body.replaceChildren();mocks.events.clear();mocks.leaves=[];mocks.load.mockReset().mockResolvedValue(null);mocks.save.mockReset().mockResolvedValue(undefined);mocks.open.mockReset();mocks.create.mockReset().mockResolvedValue({path:'Untitled 1.md'});});
+beforeEach(()=>{mocks.ready=true;mocks.readyCallbacks=[];mocks.commands=[];mocks.getLeaf.mockReset();document.body.replaceChildren();mocks.events.clear();mocks.leaves=[];mocks.load.mockReset().mockResolvedValue(null);mocks.save.mockReset().mockResolvedValue(undefined);mocks.open.mockReset();mocks.create.mockReset().mockResolvedValue({path:'Untitled 1.md'});});
 it('mounts once per empty tab, ignores file leaves, and restores native content on unload',async()=>{
   mocks.leaves=[leaf(),leaf()];const plugin=new Plugin({} as any,{} as any);await plugin.onload();
   mocks.events.get('layout-change')!();mocks.events.get('active-leaf-change')!();
@@ -73,4 +73,29 @@ it('wraps from the final Salok passage to Mool Mantar',async()=>{
   (document.querySelector('.japji-next') as HTMLButtonElement).click();
   expect(document.querySelector('.japji-attribution')?.textContent).toContain('Mool Mantar · lines 1–4');
   plugin.onunload();
+});
+
+it('waits through startup events and commands without rendering or advancing progress',async()=>{
+  mocks.ready=false;mocks.leaves=[leaf()];
+  const plugin=new Plugin({} as any,{} as any);await plugin.onload();
+  mocks.events.get('layout-change')!();mocks.events.get('active-leaf-change')!();
+  mocks.commands[0].callback();
+  expect(document.querySelector('.japji-new-tab')).toBeNull();
+  expect(mocks.getLeaf).not.toHaveBeenCalled();
+  expect(mocks.save).not.toHaveBeenCalled();
+  mocks.ready=true;mocks.readyCallbacks.splice(0).forEach(cb=>cb());
+  expect(document.querySelectorAll('.japji-new-tab')).toHaveLength(1);
+  expect(document.querySelector('.japji-attribution')?.textContent).toContain('Mool Mantar · lines 1–4');
+  expect(mocks.getLeaf).toHaveBeenCalledWith('tab');
+  await vi.waitFor(()=>expect(mocks.save).toHaveBeenCalledExactlyOnceWith({nextPassage:1}));
+  plugin.onunload();
+});
+
+it('does not run deferred startup work after the plugin is disabled',async()=>{
+  mocks.ready=false;mocks.leaves=[leaf()];
+  const plugin=new Plugin({} as any,{} as any);await plugin.onload();
+  mocks.commands[0].callback();plugin.onunload();
+  mocks.ready=true;mocks.readyCallbacks.splice(0).forEach(cb=>cb());
+  expect(document.querySelector('.japji-new-tab')).toBeNull();
+  expect(mocks.getLeaf).not.toHaveBeenCalled();expect(mocks.save).not.toHaveBeenCalled();
 });

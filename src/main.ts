@@ -20,7 +20,15 @@ export default class JapjiNewTab extends Plugin {
       this.data = {nextPassage: Number.isSafeInteger(raw.nextPassage) && raw.nextPassage! >= 0 ? raw.nextPassage : 0};
     }
     this.cursor = (this.data.nextPassage ?? 0) % this.passages.length;
-    this.addCommand({id:'open-new-tab',name:'Open new tab',callback:()=>{this.app.workspace.getLeaf('tab'); this.sync();}});
+    this.addCommand({
+      id: 'open-new-tab',
+      name: 'Open new tab',
+      callback: () => this.app.workspace.onLayoutReady(() => {
+        if (this.stopped) return;
+        this.app.workspace.getLeaf('tab');
+        this.sync();
+      }),
+    });
     this.registerEvent(this.app.workspace.on('layout-change',()=>this.sync()));
     this.registerEvent(this.app.workspace.on('active-leaf-change',()=>this.sync()));
     this.app.workspace.onLayoutReady(()=> {
@@ -38,7 +46,7 @@ export default class JapjiNewTab extends Plugin {
   }
 
   private sync() {
-    if (this.stopped) return;
+    if (this.stopped || !this.app.workspace.layoutReady) return;
     const leaves = new Set(this.app.workspace.getLeavesOfType('empty'));
     for (const [leaf, mount] of this.mounted) {
       if (!leaves.has(leaf) || !mount.root.isConnected) {
@@ -79,6 +87,7 @@ export default class JapjiNewTab extends Plugin {
   }
 
   private renderPassage(root: HTMLElement) {
+    if (this.stopped || !this.app.workspace.layoutReady) return;
     const section = root.querySelector<HTMLElement>('.japji-passage');
     if (!section) return;
     section.empty();
