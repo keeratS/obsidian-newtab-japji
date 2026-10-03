@@ -1,0 +1,9 @@
+{
+  "id": "japji-new-tab",
+  "name": "New Tab Japji",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Start each new tab with a short passage from Japji Sahib, its English translation, and useful note shortcuts.",
+  "author": "Keerat Singh",
+  "isDesktopOnly": false
+}

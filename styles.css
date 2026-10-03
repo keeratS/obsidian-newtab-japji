@@ -1,0 +1,33 @@
+/* Scope every rule to the plugin, and let the active theme supply typography. */
+.japji-empty > :not(.japji-new-tab) { display: none !important; }
+.japji-empty { overflow-y: auto; }
+.japji-new-tab {
+  box-sizing: border-box;
+  width: min(100%, 660px);
+  margin: 0 auto;
+  padding: 24px 28px;
+  font-family: var(--font-interface);
+  font-size: var(--tab-font-size, var(--font-ui-small));
+  font-weight: var(--font-normal);
+  color: var(--text-normal);
+  line-height: 1.4;
+}
+.japji-khanda { text-align: center; color: var(--text-muted); font-size: 1.5em; line-height: 1; margin-bottom: 14px; }
+.japji-verse { margin-bottom: 10px; }
+.japji-new-tab .japji-original, .japji-new-tab .japji-translation { margin: 0; font: inherit; color: var(--text-muted); overflow-wrap: anywhere; }
+.japji-new-tab .japji-original { font-weight: var(--font-bold, 700); }
+.japji-new-tab .japji-translation { margin-top: 2px; color: var(--text-muted); }
+.japji-attribution { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 12px; color: var(--text-faint); font-size: var(--font-ui-small); }
+.japji-attribution a { color: var(--text-muted); text-decoration: none; }
+.japji-attribution a:hover { color: var(--text-accent); text-decoration: underline; }
+.japji-new-tab .japji-next { padding: 0; height: auto; background: transparent; box-shadow: none; font: inherit; color: var(--text-muted); cursor: pointer; }
+.japji-new-tab hr { margin: 16px 0 12px; border: 0; border-top: 1px solid var(--background-modifier-border); }
+.japji-shortcuts-title { color: var(--text-faint); font-size: var(--font-ui-small); margin: 0 0 10px; }
+.japji-new-tab .japji-shortcut { display: flex; align-items: center; gap: 14px; width: 100%; height: auto; padding: 10px 8px; margin: 2px 0; background: transparent; box-shadow: none; border: 0; border-radius: var(--radius-s); text-align: left; font: inherit; color: var(--text-normal); white-space: normal; cursor: pointer; }
+.japji-new-tab .japji-shortcut:hover { background: var(--background-modifier-hover); }
+.japji-shortcut-icon { display: flex; color: var(--text-muted); flex: 0 0 18px; }
+.japji-shortcut-icon svg { width: 18px; height: 18px; }
+.japji-shortcut-label, .japji-shortcut-description { display: block; }
+.japji-shortcut-description { color: var(--text-faint); font-size: var(--font-ui-small); margin-top: 2px; }
+.japji-new-tab button:focus-visible, .japji-new-tab a:focus-visible { outline: 2px solid var(--interactive-accent); outline-offset: 3px; }
+@media (max-width: 400px) { .japji-new-tab { padding: 24px 18px; } }
