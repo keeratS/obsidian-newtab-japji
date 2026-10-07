@@ -14,7 +14,10 @@ vi.mock('obsidian',()=>({
 }));
 import Plugin from '../src/main';
 import { PASSAGES } from '../src/passages';
-// Minimal implementations of Obsidian's DOM helpers for host lifecycle tests.
+// Test-only implementation of Obsidian's DOM helpers: Obsidian is not running
+// in jsdom, so document.createElement supplies the underlying elements here
+// and in the mock workspace below. Production code uses Obsidian's createEl,
+// createDiv, and createSpan helpers. This harness is not bundled into main.js.
 Object.assign(HTMLElement.prototype,{
   empty(){this.replaceChildren();},
   createEl(tag:string,options:any={}){const el=document.createElement(tag);if(options.cls)el.className=options.cls;if(options.text)el.textContent=options.text;if(options.href)el.setAttribute('href',options.href);for(const [key,value] of Object.entries(options.attr??{}))el.setAttribute(key,value as string);this.append(el);return el;},

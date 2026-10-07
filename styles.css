@@ -1,6 +1,6 @@
 /* Copyright (c) 2026 Keerat Singh; SPDX-License-Identifier: GPL-3.0-only */
 /* Scope every rule to the plugin, and let the active theme supply typography. */
-.japji-empty > :not(.japji-new-tab) { display: none !important; }
+.workspace-leaf-content .view-content.japji-empty > :not(.japji-new-tab) { display: none; }
 .japji-empty { overflow-y: auto; }
 .japji-new-tab {
   box-sizing: border-box;
