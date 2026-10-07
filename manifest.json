@@ -1,7 +1,7 @@
 {
   "id": "new-tab-japji",
   "name": "New Tab Japji",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "minAppVersion": "1.13.7",
   "description": "Show sequential passages from the Sikh prayer Japji Sahib in each new tab, with Roman transliteration, English translations, and note shortcuts. Works offline and follows your theme.",
   "author": "Keerat Singh",
